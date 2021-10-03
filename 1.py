@@ -71,15 +71,17 @@ def process(file_path):
     logging.info("Done in %.3f seconds.",elapsed_time)
 
     return(char_dict)
-    
+
 def plotter(char_dict):
     frequencies=np.zeros(len(char_dict))
     num_letters=sum(char_dict.values())
+    a=list(char_dict.items())
+    print(a[0])
+
     i=0
-    for ch, num in char_dict.items():
+    for ch, num in a:
         frequencies[i]=num/num_letters
         i+=1
-    print(frequencies)
 
     plt.style.use('Solarize_Light2')
     params = {'axes.labelsize': '20',
@@ -91,15 +93,14 @@ def plotter(char_dict):
          'font.size': '25',
          'font.family': 'sans-serif'}
     plt.rcParams.update(params)
-    x=np.linspace(0, len(char_dict), len(char_dict))
+    x=char_dict.keys()
     plt.title('Letter frequency in the book')
     plt.bar(x, frequencies, alpha=0.5)
-    plt.xlabel('letters')
     plt.ylabel('frequency percentage')
     plt.legend(loc=2)
     plt.savefig('histo.png', bbox_inches='tight', dpi=100)
     plt.show()
-    
+
 if __name__ =="__main__" :  #
     parser = argparse.ArgumentParser()
     parser.add_argument('infile',type=str, help="Path to the input file")
