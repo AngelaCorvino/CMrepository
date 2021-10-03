@@ -5,6 +5,8 @@ import time
 import string
 import argparse
 import logging
+import matplotlib.pyplot as plt
+import numpy as np
 logging.basicConfig(level=logging.INFO)
 
 """
@@ -68,10 +70,40 @@ def process(file_path):
     elapsed_time=time.time()-start_time
     logging.info("Done in %.3f seconds.",elapsed_time)
 
+    return(char_dict)
+    
+def plotter(char_dict):
+    frequencies=np.zeros(len(char_dict))
+    num_letters=sum(char_dict.values())
+    i=0
+    for ch, num in char_dict.items():
+        frequencies[i]=num/num_letters
+        i+=1
+    print(frequencies)
 
+    plt.style.use('Solarize_Light2')
+    params = {'axes.labelsize': '20',
+         'axes.titlesize':'30',
+         'xtick.labelsize':'15',
+         'ytick.labelsize':'15',
+         'legend.fontsize': '15',
+         'lines.linewidth': '2',
+         'font.size': '25',
+         'font.family': 'sans-serif'}
+    plt.rcParams.update(params)
+    x=np.linspace(0, len(char_dict), len(char_dict))
+    plt.title('Letter frequency in the book')
+    plt.bar(x, frequencies, alpha=0.5)
+    plt.xlabel('letters')
+    plt.ylabel('frequency percentage')
+    plt.legend(loc=2)
+    plt.savefig('histo.png', bbox_inches='tight', dpi=100)
+    plt.show()
+    
 if __name__ =="__main__" :  #
     parser = argparse.ArgumentParser()
     parser.add_argument('infile',type=str, help="Path to the input file")
     args=parser.parse_args()
 
-    process(args.infile)
+    dictionary=process(args.infile)
+    plotter(dictionary)
